@@ -1,6 +1,7 @@
 import Hero from './components/Hero'
 import DashboardMockup from './components/DashboardMockup'
 import Profiles from './components/Profiles'
+import Simulator from './components/Simulator'
 import Pricing from './components/Pricing'
 
 function App() {
@@ -16,7 +17,8 @@ function App() {
             TaxEngine
           </div>
           <div className="hidden md:flex gap-6 text-sm font-medium text-slate-300">
-            <button onClick={() => document.getElementById('dashboard-section').scrollIntoView({ behavior: 'smooth' })} className="hover:text-cyan-400 transition-colors">Simulación</button>
+            <button onClick={() => document.getElementById('dashboard-section').scrollIntoView({ behavior: 'smooth' })} className="hover:text-cyan-400 transition-colors">Métricas</button>
+            <button onClick={() => document.getElementById('simulator-section').scrollIntoView({ behavior: 'smooth' })} className="hover:text-cyan-400 transition-colors">Simulador</button>
             <button onClick={() => document.getElementById('pricing-section').scrollIntoView({ behavior: 'smooth' })} className="hover:text-cyan-400 transition-colors">Precios</button>
           </div>
         </div>
@@ -26,6 +28,7 @@ function App() {
         <Hero />
         <DashboardMockup />
         <Profiles />
+        <Simulator />
         <Pricing />
       </main>
 
