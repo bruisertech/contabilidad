@@ -13,7 +13,7 @@ export default function Simulator() {
   const [activeProfile, setActiveProfile] = useState('natural');
   const [incomes, setIncomes] = useState([{ id: 1, description: 'Salario', amount: 5000000 }]);
   const [investments, setInvestments] = useState(2000000);
-  const [bankAccounts, setBankAccounts] = useState(15000000);
+  const [accounts, setAccounts] = useState([{ id: 1, name: 'Cuenta / Cliente 1', amount: 15000000 }]);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
@@ -25,6 +25,23 @@ export default function Simulator() {
     if (incomes.length > 1) {
       setIncomes(incomes.filter(inc => inc.id !== id));
     }
+  };
+
+
+  const addAccount = () => {
+    setAccounts([...accounts, { id: Date.now(), name: `${activeProfile === 'natural' ? 'Cuenta' : 'Empresa / Cliente'} ${accounts.length + 1}`, amount: 0 }]);
+  };
+
+  const removeAccount = (id) => {
+    if (accounts.length > 1) {
+      setAccounts(accounts.filter(acc => acc.id !== id));
+    }
+  };
+
+  const updateAccount = (id, field, value) => {
+    setAccounts(accounts.map(acc =>
+      acc.id === id ? { ...acc, [field]: value } : acc
+    ));
   };
 
   const updateIncome = (id, field, value) => {
@@ -42,14 +59,15 @@ export default function Simulator() {
   };
 
   const totalIncomes = incomes.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
+  const totalAccounts = accounts.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
 
   const chartData = useMemo(() => {
     return [
       { name: 'Ingresos Totales', value: totalIncomes, color: activeProfile === 'natural' ? '#D4AF37' : '#00E5FF' },
       { name: 'Inversiones', value: Number(investments) || 0, color: '#33EFFF' },
-      { name: 'Dinero en Cuentas', value: Number(bankAccounts) || 0, color: '#1E293B' },
+      { name: activeProfile === 'natural' ? 'Dinero en Cuentas' : 'Capital Clientes/Empresas', value: totalAccounts, color: '#FF6B6B' },
     ].filter(item => item.value > 0);
-  }, [totalIncomes, investments, bankAccounts, activeProfile]);
+  }, [totalIncomes, investments, totalAccounts, activeProfile]);
 
   const profileTheme = activeProfile === 'natural' ? 'gold' : 'cyan';
 
@@ -181,17 +199,64 @@ export default function Simulator() {
                   />
                 </div>
               </div>
-              <div>
-                <h3 className="text-sm font-bold text-white mb-4">Saldos Bancarios</h3>
-                <div className="relative">
-                  <span className="absolute left-3 top-3 text-slate-500">$</span>
-                  <input
-                    type="number"
-                    value={bankAccounts}
-                    onChange={(e) => setBankAccounts(e.target.value)}
-                    className="w-full bg-obsidian-900 border border-slate-700 rounded-lg pl-8 pr-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors font-mono"
-                  />
+              <div className="col-span-1 sm:col-span-2 mt-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-sm font-bold text-white">
+                    {activeProfile === 'natural' ? 'Saldos de Cuentas Bancarias' : 'Cartera de Clientes / Empresas'}
+                  </h3>
                 </div>
+
+                <div className="space-y-3">
+                  <AnimatePresence>
+                    {accounts.map((acc, index) => (
+                      <motion.div
+                        key={acc.id}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="flex flex-col sm:flex-row gap-3 items-end"
+                      >
+                        <div className="flex-1 w-full">
+                          <label className="block text-xs font-medium text-slate-400 mb-1">
+                            {activeProfile === 'natural' ? 'Nombre de Cuenta' : 'Nombre del Cliente/Empresa'}
+                          </label>
+                          <input
+                            type="text"
+                            value={acc.name}
+                            onChange={(e) => updateAccount(acc.id, 'name', e.target.value)}
+                            className="w-full bg-obsidian-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 transition-colors text-sm"
+                            placeholder={activeProfile === 'natural' ? "Ej. Ahorros Bancolombia" : "Ej. Empresa S.A.S"}
+                          />
+                        </div>
+                        <div className="flex-1 w-full relative">
+                          <label className="block text-xs font-medium text-slate-400 mb-1">Saldo (COP)</label>
+                          <span className="absolute left-3 top-8 text-slate-500 text-sm">$</span>
+                          <input
+                            type="number"
+                            value={acc.amount}
+                            onChange={(e) => updateAccount(acc.id, 'amount', e.target.value)}
+                            className="w-full bg-obsidian-900 border border-slate-700 rounded-lg pl-7 pr-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 transition-colors font-mono text-sm"
+                          />
+                        </div>
+                        {accounts.length > 1 && (
+                          <button
+                            onClick={() => removeAccount(acc.id)}
+                            className="p-2.5 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-colors mb-0 sm:mb-0 h-[42px]"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        )}
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+
+                <button
+                  onClick={addAccount}
+                  className="mt-3 text-xs font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition-colors"
+                >
+                  <Plus size={14} /> Añadir otro {activeProfile === 'natural' ? 'saldo' : 'cliente'}
+                </button>
               </div>
             </div>
 
@@ -277,7 +342,7 @@ export default function Simulator() {
                 <div>
                   <p className="text-slate-400 text-xs uppercase tracking-wider mb-1">Patrimonio Bruto Estimado</p>
                   <p className="text-2xl font-mono font-bold text-white">
-                    ${(totalIncomes + Number(investments) + Number(bankAccounts)).toLocaleString('es-CO')}
+                    ${(totalIncomes + Number(investments) + totalAccounts).toLocaleString('es-CO')}
                   </p>
                 </div>
                 <ShieldCheck size={32} className={`opacity-50 ${profileTheme === 'gold' ? 'text-gold-400' : 'text-cyan-400'}`} />
