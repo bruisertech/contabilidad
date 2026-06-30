@@ -64,8 +64,8 @@ export default function Simulator() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className={`inline-block mb-4 px-4 py-1.5 rounded-full border border-${profileTheme}-500/30 bg-${profileTheme}-500/10 backdrop-blur-md`}>
-              <span className={`text-${profileTheme}-400 text-sm font-semibold tracking-wider uppercase`}>
+            <div className={`inline-block mb-4 px-4 py-1.5 rounded-full border backdrop-blur-md ${profileTheme === 'gold' ? 'border-gold-500/30 bg-gold-500/10' : 'border-cyan-500/30 bg-cyan-500/10'}`}>
+              <span className={`text-sm font-semibold tracking-wider uppercase ${profileTheme === 'gold' ? 'text-gold-400' : 'text-cyan-400'}`}>
                 Simulador Tributario Avanzado
               </span>
             </div>
@@ -113,7 +113,7 @@ export default function Simulator() {
             <div className="glass-card p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  <span className={`w-2 h-6 bg-${profileTheme}-500 rounded-full`}></span>
+                  <span className={`w-2 h-6 rounded-full ${profileTheme === 'gold' ? 'bg-gold-500' : 'bg-cyan-500'}`}></span>
                   Fuentes de Ingreso
                 </h3>
               </div>
@@ -280,7 +280,7 @@ export default function Simulator() {
                     ${(totalIncomes + Number(investments) + Number(bankAccounts)).toLocaleString('es-CO')}
                   </p>
                 </div>
-                <ShieldCheck size={32} className={`text-${profileTheme}-400 opacity-50`} />
+                <ShieldCheck size={32} className={`opacity-50 ${profileTheme === 'gold' ? 'text-gold-400' : 'text-cyan-400'}`} />
               </div>
             </div>
 
