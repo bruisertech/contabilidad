@@ -119,7 +119,7 @@ export default function Simulator() {
               </div>
 
               <AnimatePresence>
-                {incomes.map((inc, index) => (
+                {incomes.map((inc) => (
                   <motion.div
                     key={inc.id}
                     initial={{ opacity: 0, height: 0 }}

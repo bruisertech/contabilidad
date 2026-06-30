@@ -2,7 +2,6 @@ import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
-import CountUp from 'react-countup';
 import { ChevronDown } from 'lucide-react';
 
 const Particles = ({ count }) => {
