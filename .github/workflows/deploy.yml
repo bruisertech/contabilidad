@@ -2,7 +2,7 @@ name: Deploy Vite SPA to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["feature/premium-landing-page-643223054533008362", "main", "master"]
   workflow_dispatch:
 
 permissions:
